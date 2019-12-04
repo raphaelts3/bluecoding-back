@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+ln -s .env.example .env
+sudo docker-compose exec blue_php composer install
+sudo docker-compose exec blue_nginx chown -R nginx:nginx /app/storage

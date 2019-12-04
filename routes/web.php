@@ -11,6 +11,18 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+use Illuminate\Http\Request;
+
+$router->get(
+    '/',
+    function () use ($router) {
+        return $router->app->version();
+    }
+);
+
+$router->post(
+    'auth/login',
+    [
+        'uses' => 'AuthController@authenticate'
+    ]
+);
