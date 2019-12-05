@@ -13,7 +13,7 @@ class JWTService implements TokenInterface
     /**
      * @inheritDoc
      */
-    public function Validate(string $token = null): int
+    public function validate(string $token = null): int
     {
         try {
             $credentials = JWT::decode($token, env('JWT_SECRET'), ['HS256']);
@@ -31,7 +31,7 @@ class JWTService implements TokenInterface
     /**
      * @inheritDoc
      */
-    public function Generate(int $userId): string
+    public function generate(int $userId): string
     {
         $payload = [
             'iss' => env('APP_NAME') . '-' . env('APP_ENV'),
@@ -48,7 +48,7 @@ class JWTService implements TokenInterface
     /**
      * @inheritDoc
      */
-    public function Invalidate(string $token = null): void
+    public function invalidate(string $token = null): void
     {
         try {
             JWT::decode($token, env('JWT_SECRET'), ['HS256']);

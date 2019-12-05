@@ -37,11 +37,10 @@ class AuthController extends BaseController
     /**
      * Authenticate a user and return the token if the provided credentials are correct.
      *
-     * @param User $user
      * @return mixed
      * @throws ValidationException
      */
-    public function authenticate(User $user)
+    public function authenticate()
     {
         $this->validate(
             $this->request,
@@ -53,7 +52,7 @@ class AuthController extends BaseController
 
         $user = User::where('email', $this->request->input('email'))->first();
         if ($user && Hash::check($this->request->input('password'), $user->password)) {
-            $token = $this->tokenService->Generate($user->id);
+            $token = $this->tokenService->generate($user->id);
             return response()->json(
                 [
                     'token' => $token
@@ -68,5 +67,14 @@ class AuthController extends BaseController
             ],
             400
         );
+    }
+
+    /**
+     * Logout a user
+     */
+    public function logout()
+    {
+        $this->tokenService->invalidate($this->request->bearerToken());
+        return response()->json([], 200);
     }
 }

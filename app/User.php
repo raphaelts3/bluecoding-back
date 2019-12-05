@@ -10,7 +10,8 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable;
+    use Authenticatable;
+    use Authorizable;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +19,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name',
+        'email',
+        'password'
     ];
 
     /**
@@ -29,4 +32,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Get the favorites gifs
+     */
+    public function favorites()
+    {
+        return $this->morphToMany('App\Gif', 'favorite');
+    }
+
+    /**
+     * Get the history
+     */
+    public function history()
+    {
+        return $this->hasMany('App\History');
+    }
 }

@@ -22,7 +22,6 @@ class CreateGifTagTable extends Migration
 
                 $table->foreign('gif_id')->references('id')->on('gifs');
                 $table->foreign('tag_id')->references('id')->on('tags');
-                $table->unique(['gif_id', 'tag_id']);
             }
         );
     }

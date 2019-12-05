@@ -77,8 +77,10 @@ $app->routeMiddleware(
 // $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\TokenServiceProvider::class);
+$app->register(App\Providers\GifSourceServiceProvider::class);
+$app->register(App\Providers\MinifyServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -99,5 +101,17 @@ $app->router->group(
         require __DIR__ . '/../routes/web.php';
     }
 );
+
+if (!function_exists('public_path')) {
+    /**
+     * Return the path to public dir
+     * @param null $path
+     * @return string
+     */
+    function public_path($path = null)
+    {
+        return rtrim(app()->basePath('public/' . $path), '/');
+    }
+}
 
 return $app;

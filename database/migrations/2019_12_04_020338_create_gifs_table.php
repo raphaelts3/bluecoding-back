@@ -17,12 +17,9 @@ class CreateGifsTable extends Migration
             'gifs',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->unsignedBigInteger('user_id');
                 $table->bigInteger('views');
-                $table->binary('content');
+                $table->string('path', 255);
                 $table->timestamps();
-
-                $table->foreign('user_id')->references('id')->on('users');
             }
         );
     }

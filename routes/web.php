@@ -20,9 +20,47 @@ $router->get(
     }
 );
 
+$router->get(
+    'gifs',
+    [
+        'uses' => 'GifSearchController@index'
+    ]
+);
+
+$router->get(
+    'gif/s/',
+    [
+        'middleware' => 'auth',
+        'uses' => 'GifSearchController@search'
+    ]
+);
+
+$router->get(
+    'history',
+    [
+        'middleware' => 'auth',
+        'uses' => 'HistoryController@index'
+    ]
+);
+
 $router->post(
     'auth/login',
     [
         'uses' => 'AuthController@authenticate'
+    ]
+);
+
+$router->get(
+    'auth/logout',
+    [
+        'middleware' => 'auth',
+        'uses' => 'AuthController@logout'
+    ]
+);
+
+$router->post(
+    'auth/register',
+    [
+        'uses' => 'RegisterController@register'
     ]
 );

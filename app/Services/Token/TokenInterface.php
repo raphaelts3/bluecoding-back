@@ -13,19 +13,19 @@ interface TokenInterface
      * @param int $userId
      * @return string
      */
-    public function Generate(int $userId): string;
+    public function generate(int $userId): string;
 
     /**
      * @param string|null $token
      * @return int
      * @throws TokenException
      */
-    public function Validate(string $token = null): int;
+    public function validate(string $token = null): int;
 
     /**
      * @param string|null $token
      * @return void
      * @throws TokenException
      */
-    public function Invalidate(string $token = null): void;
+    public function invalidate(string $token = null): void;
 }
