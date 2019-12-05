@@ -13,17 +13,8 @@ class Favorite extends Model
      * @var array
      */
     protected $fillable = [
-        'views',
-        'content',
-    ];
-
-    /**
-     * The model's default values for attributes.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'views' => 0,
+        'user_id',
+        'gif_id',
     ];
 
     /**

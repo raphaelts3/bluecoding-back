@@ -42,11 +42,11 @@ class GifCrawler extends Command
      * @param GifSourceInterface $gifService
      * @return mixed
      */
-    public function handle(GifSourceInterface $gifService, Base62Service $base62Service)
+    public function handle(GifSourceInterface $gifService)
     {
         $data = $gifService->list(1);
         foreach ($gifService->download($data['links']) as $i => $content) {
-            $this->createGif($content, $data['tags'][$i], $base62Service);
+            $this->createGif($content, $data['tags'][$i]);
         }
     }
 
@@ -54,7 +54,7 @@ class GifCrawler extends Command
      * @param array $tags
      * @param string $content
      */
-    private function createGif(string $content, array $tags, $base62Service)
+    private function createGif(string $content, array $tags)
     {
         $path = 'gifs/' . uniqid('', true) . '.gif';
         file_put_contents(public_path($path), $content);

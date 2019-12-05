@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Events\SearchEvent;
 use App\Gif;
+use App\Services\Minify\MinifyInterface;
 use App\Tag;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
-class GifSearchController extends BaseController
+class GifController extends BaseController
 {
     /**
      * @var Request
@@ -24,15 +26,20 @@ class GifSearchController extends BaseController
      * @var int
      */
     private $offset;
+    /**
+     * @var MinifyInterface
+     */
+    private $minifyService;
 
     /**
-     * GifSearchController constructor.
+     * GifController constructor.
      * @param Request $request
+     * @param MinifyInterface $minifyService
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, MinifyInterface $minifyService)
     {
         $this->request = $request;
-        $this->getBounds();
+        $this->minifyService = $minifyService;
     }
 
     /**
@@ -61,6 +68,7 @@ class GifSearchController extends BaseController
      */
     public function index()
     {
+        $this->getBounds();
         $data = Gif::select()->orderBy('created_at', 'desc')->skip($this->offset)->limit($this->limit)->get();
         return response()->json(
             [
@@ -79,6 +87,7 @@ class GifSearchController extends BaseController
      */
     public function search()
     {
+        $this->getBounds();
         $query = $this->request->query('query');
         $keywords = explode(',', $query);
 
@@ -99,6 +108,32 @@ class GifSearchController extends BaseController
                     'limit' => $this->limit,
                     'offset' => $this->offset
                 ]
+            ]
+        );
+    }
+
+    /**
+     * Redirect to the gif
+     * @param string $key
+     * @return RedirectResponse
+     */
+    public function get(string $key)
+    {
+        $gif = Gif::findOrFail($this->minifyService->decode($key));
+        return redirect($gif->path);
+    }
+
+    /**
+     * Encode gifId
+     * @param string $gifId
+     * @return JsonResponse
+     */
+    public function share(string $gifId)
+    {
+        Gif::findOrFail($gifId);
+        return response()->json(
+            [
+                'url' => route('minified', ['key' => $this->minifyService->encode($gifId)])
             ]
         );
     }

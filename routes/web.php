@@ -23,44 +23,83 @@ $router->get(
 $router->get(
     'gifs',
     [
-        'uses' => 'GifSearchController@index'
+        'uses' => 'GifController@index'
     ]
 );
 
 $router->get(
-    'gif/s/',
+    'g/{key}',
     [
-        'middleware' => 'auth',
-        'uses' => 'GifSearchController@search'
+        'as' => 'minified',
+        'uses' => 'GifController@get'
     ]
 );
 
-$router->get(
-    'history',
-    [
-        'middleware' => 'auth',
-        'uses' => 'HistoryController@index'
-    ]
+$router->group(
+    ['prefix' => 'gif'],
+    function () use ($router) {
+        $router->group(
+            ['middleware' => 'auth'],
+            function () use ($router) {
+                $router->get(
+                    'search',
+                    [
+                        'uses' => 'GifController@search'
+                    ]
+                );
+
+                $router->get(
+                    'share/{gifId}',
+                    [
+                        'uses' => 'GifController@share'
+                    ]
+                );
+            }
+        );
+    }
 );
 
-$router->post(
-    'auth/login',
-    [
-        'uses' => 'AuthController@authenticate'
-    ]
+$router->group(
+    ['prefix' => 'user', 'middleware' => 'auth'],
+    function () use ($router) {
+        $router->get(
+            'history',
+            [
+                'uses' => 'HistoryController@index'
+            ]
+        );
+        $router->get(
+            'favorite/{gifId}',
+            [
+                'uses' => 'FavoriteController@store'
+            ]
+        );
+    }
 );
 
-$router->get(
-    'auth/logout',
-    [
-        'middleware' => 'auth',
-        'uses' => 'AuthController@logout'
-    ]
-);
+$router->group(
+    ['prefix' => 'auth'],
+    function () use ($router) {
+        $router->post(
+            'login',
+            [
+                'uses' => 'AuthController@authenticate'
+            ]
+        );
 
-$router->post(
-    'auth/register',
-    [
-        'uses' => 'RegisterController@register'
-    ]
+        $router->get(
+            'logout',
+            [
+                'middleware' => 'auth',
+                'uses' => 'AuthController@logout'
+            ]
+        );
+
+        $router->post(
+            'register',
+            [
+                'uses' => 'RegisterController@register'
+            ]
+        );
+    }
 );

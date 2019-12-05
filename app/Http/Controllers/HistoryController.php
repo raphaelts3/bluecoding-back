@@ -24,7 +24,7 @@ class HistoryController extends BaseController
     private $offset;
 
     /**
-     * GifSearchController constructor.
+     * HistoryController constructor.
      * @param Request $request
      */
     public function __construct(Request $request)
