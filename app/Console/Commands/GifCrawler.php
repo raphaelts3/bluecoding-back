@@ -6,7 +6,6 @@ namespace App\Console\Commands;
 
 use App\Gif;
 use App\Services\GifSource\GifSourceInterface;
-use App\Services\Minify\Base62Service;
 use App\Tag;
 use Illuminate\Console\Command;
 
@@ -17,7 +16,7 @@ class GifCrawler extends Command
      *
      * @var string
      */
-    protected $signature = 'gif:crawl';
+    protected $signature = 'gif:crawl {maxPages=1}';
 
     /**
      * The console command description.
@@ -44,7 +43,7 @@ class GifCrawler extends Command
      */
     public function handle(GifSourceInterface $gifService)
     {
-        $data = $gifService->list(1);
+        $data = $gifService->list($this->argument('maxPages'));
         foreach ($gifService->download($data['links']) as $i => $content) {
             $this->createGif($content, $data['tags'][$i]);
         }

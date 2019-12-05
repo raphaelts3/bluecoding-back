@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
-ln -s .env.example .env
+ln -sf .env.example .env
 sudo docker-compose exec blue_php composer install
 sudo docker-compose exec blue_nginx chown -R nginx:nginx /app/storage
+sudo docker-compose exec blue_php php artisan migrate
+sudo docker-compose exec blue_php php artisan gif:crawl 2
+sudo docker-compose exec blue_php ./vendor/bin/phpunit
