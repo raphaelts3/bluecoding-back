@@ -28,8 +28,8 @@ class AuthTest extends TestCase
         $this->post(
             '/auth/login',
             [
-                'email' => 'test@test.com',
-                'password' => '12345678'
+                'email' => 'abc@abc.com',
+                'password' => '123'
             ]
         );
 
